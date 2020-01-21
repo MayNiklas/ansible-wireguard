@@ -22,7 +22,7 @@
 - name: Add an apt keys from keyserver.ubuntu.com
   apt_key:
     keyserver: keyserver.ubuntu.com
-    id: { item }
+    id: "{{ item }}"
     state: present
   with_items:
     - 8B48AD6246925553
