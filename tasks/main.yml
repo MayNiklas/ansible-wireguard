@@ -41,12 +41,12 @@
 
 - name: Pi Zero - Build Wireguard from source
   make:
-    chdir: ~/wireguard-source
+    chdir: ~/wireguard-source/src
   when: ansible_architecture == 'armv6l'    
 
 - name: Pi Zero - Install Wireguard from source
   make:
-    chdir: ~/wireguard-source
+    chdir: /root/wireguard-source/src
     target: install
   become: yes
   when: ansible_architecture == 'armv6l'  
@@ -75,3 +75,5 @@
     update_cache: yes
     pkg:
     - wireguard
+  when: ansible_architecture == 'x86_64' or ansible_architecture == 'armv7l'
+
