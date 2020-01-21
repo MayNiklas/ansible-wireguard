@@ -6,24 +6,38 @@
     update_cache: yes
     state: latest
   
-- name: Make sure are necessary packages are up-to-date
+- name: Debian - installing necessary packages
   apt:
     state: latest
     pkg:
     - dirmngr
+  when: ansible_architecture == 'x86_64'
 
-- name: Install raspberrypi-kernel-headers
+- name: Raspberry Pi - installing necessary packages
   apt: 
     state: latest
     pkg: 
     - raspberrypi-kernel-headers
+    - dirmngr
   when: ansible_architecture == 'armv7l'
+
+- name: Pi Zero - installing necessary packages
+  apt: 
+    state: latest
+    pkg: 
+    - raspberrypi-kernel-headers
+    - libmnl-dev
+    - libelf-dev
+    - build-essential
+    - git
+  when: ansible_architecture == 'armv6l'
 
 - name: Make sure debian unstable repository is present
   apt_repository:
     repo: deb http://deb.debian.org/debian/ unstable main
     state: present
     filename: unstable
+  when: ansible_architecture == 'x86_64' or ansible_architecture == 'armv7l'
 
 - name: Add an apt keys from keyserver.ubuntu.com
   apt_key:
@@ -34,6 +48,7 @@
     - 8B48AD6246925553
     - 7638D0442B90D010
     - 04EE7237B7D453EC
+  when: ansible_architecture == 'x86_64' or ansible_architecture == 'armv7l'
 
 - name: Make sure are necessary packages are up-to-date
   apt:
