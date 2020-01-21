@@ -37,6 +37,7 @@
   git:
     repo: https://git.zx2c4.com/WireGuard
     dest: ~/wireguard-source
+  when: ansible_architecture == 'armv6l' 
 
 - name: Pi Zero - Build Wireguard from source
   make:
