@@ -11,6 +11,7 @@
     state: latest
     pkg:
     - dirmngr
+    - git
   when: ansible_architecture == 'x86_64'
 
 - name: Raspberry Pi - installing necessary packages
@@ -31,6 +32,23 @@
     - build-essential
     - git
   when: ansible_architecture == 'armv6l'
+
+- name: Pi Zero - clone Wireguard source
+  git:
+    repo: https://git.zx2c4.com/WireGuard
+    dest: ~/wireguard-source
+
+- name: Pi Zero - Build Wireguard from source
+  make:
+    chdir: ~/wireguard-source
+  when: ansible_architecture == 'armv6l'    
+
+- name: Pi Zero - Install Wireguard from source
+  make:
+    chdir: ~/wireguard-source
+    target: install
+  become: yes
+  when: ansible_architecture == 'armv6l'  
 
 - name: Make sure debian unstable repository is present
   apt_repository:
