@@ -28,6 +28,16 @@
 #    - 8B48AD6246925553
 #    - 7638D0442B90D010
 ##    - 04EE7237B7D453EC
+- name: unstable Priority
+  become: true
+  command: "{{ item }}"
+  args:
+    creates: /etc/apt/sources.list.d/.ansible-apt-unstable-priority
+  with_items:
+    - "printf 'Package: *\nPin: release a=unstable\nPin-Priority: 150\n' | sudo tee --append /etc/apt/preferences.d/limit-unstable"
+    - "touch /etc/apt/sources.list.d/.ansible-apt-unstable-priority"
+  when: ansible_distribution == 'Debian'
+
 
 - name: x86_64 Ubuntu 18 - Add PPA for Wireguard under Ubuntu.
   become: yes
