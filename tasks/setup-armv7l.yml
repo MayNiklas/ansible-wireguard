@@ -2,30 +2,31 @@
 # tasks file for ansible-wireguard
 
 - name: armv7l raspberry pi - installing raspberrypi-kernel-headers & dirmngr
-   become: yes
-   apt:
-     state: latest
-     update_cache: yes
-     pkg:
+  become: yes
+  apt:
+    state: latest
+    update_cache: yes
+    pkg:
       - raspberrypi-kernel-headers
       - dirmngr
 
 - name: armv7l raspberry pi - make sure debian unstable repository is present
+  become: yes
   apt_repository:
     repo: deb http://deb.debian.org/debian/ unstable main
     state: present
     filename: unstable
 
-- name:  armv7l Raspberry pi - add apt keys from keyserver.ubuntu.com
-  become: yes
-  apt_key:
-    keyserver: keyserver.ubuntu.com
-    id: "{{ item }}"
-    state: present
-  with_items:
-    - 8B48AD6246925553
-    - 7638D0442B90D010
-    - 04EE7237B7D453EC
+#- name:  armv7l Raspberry pi - add apt keys from keyserver.ubuntu.com
+#  become: yes
+#  apt_key:
+#    keyserver: keyserver.ubuntu.com
+#    id: "{{ item }}"
+#    state: present
+#  with_items:
+#    - 8B48AD6246925553
+#    - 7638D0442B90D010
+#    - 04EE7237B7D453EC
 
 - name: armv7l Raspberry pi - make sure are wireguard is up-to-date
   become: yes

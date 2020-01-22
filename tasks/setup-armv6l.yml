@@ -1,0 +1,43 @@
+---
+# tasks file for ansible-wireguard
+
+- name: armv7l raspberry pi - installing raspberrypi-kernel-headers & dirmngr
+  become: yes
+  apt:
+    state: latest
+    update_cache: yes
+    pkg:
+      - raspberrypi-kernel-headers
+      - libmnl-dev
+      - libelf-dev
+      - build-essential
+
+- name: Pi Zero - clone Wireguard source
+  git:
+    repo: https://git.zx2c4.com/WireGuard
+    dest: ~/wireguard-source 
+
+- name: Pi Zero - compiling WireGuard
+  command: "{{ item }}"
+  args:
+    chdir: "~/wireguard-source"
+    creates: ~/.wireguard-compiled
+  with_items:
+    - "/usr/bin/make"
+    - "sudo /usr/bin/make install"
+    - "touch ~/.wireguard-compiled"
+  when: ansible_architecture == 'armv6l'   
+
+
+
+  #- name: Pi Zero - Build Wireguard from source
+#  make:
+#    chdir: ~/wireguard-source/src
+#  when: ansible_architecture == 'armv6l'    
+
+#- name: Pi Zero - Install Wireguard from source
+#  make:
+#    chdir: ~/wireguard-source/src
+#    target: install
+#  become: yes
+#  when: ansible_architecture == 'armv6l' 

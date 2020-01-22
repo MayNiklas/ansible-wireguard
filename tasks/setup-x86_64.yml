@@ -10,22 +10,31 @@
 #     - dirmngr
 #     - git
 
-- name: x86_64 - make sure debian unstable repository is present
+- name: x86_64 Debian - make sure Debian unstable repository is present
+  become: yes
   apt_repository:
     repo: deb http://deb.debian.org/debian/ unstable main
     state: present
     filename: unstable
+  when: ansible_distribution == 'Debian'
 
-- name: x86_64 - add apt keys from keyserver.ubuntu.com
+#- name: x86_64 - add apt keys from keyserver.ubuntu.com
+#  become: yes
+#  apt_key:
+#    keyserver: keyserver.ubuntu.com
+#    id: "{{ item }}"
+#    state: present
+#  with_items:
+#    - 8B48AD6246925553
+#    - 7638D0442B90D010
+##    - 04EE7237B7D453EC
+
+- name: x86_64 Ubuntu 18 - Add PPA for Wireguard under Ubuntu.
   become: yes
-  apt_key:
-    keyserver: keyserver.ubuntu.com
-    id: "{{ item }}"
+  apt_repository:
+    repo: 'ppa:wireguard/wireguard'
     state: present
-  with_items:
-    - 8B48AD6246925553
-    - 7638D0442B90D010
-    - 04EE7237B7D453EC
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version == '18'
 
 - name: x86_64 - make sure are wireguard is up-to-date
   become: yes
