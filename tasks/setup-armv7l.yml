@@ -16,17 +16,28 @@
     repo: deb http://deb.debian.org/debian/ unstable main
     state: present
     filename: unstable
+    update_cache: no
 
-#- name:  armv7l Raspberry pi - add apt keys from keyserver.ubuntu.com
-#  become: yes
-#  apt_key:
-#    keyserver: keyserver.ubuntu.com
-#    id: "{{ item }}"
-#    state: present
-#  with_items:
-#    - 8B48AD6246925553
-#    - 7638D0442B90D010
-#    - 04EE7237B7D453EC
+- name:  armv7l Raspberry pi - add apt keys from keyserver.ubuntu.com
+  become: yes
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "{{ item }}"
+    state: present
+  with_items:
+    - 8B48AD6246925553
+    - 7638D0442B90D010
+    - 04EE7237B7D453EC
+
+- name: unstable Priority
+  become: true
+  command: "{{ item }}"
+  args:
+    creates: /etc/apt/sources.list.d/.ansible-apt-unstable-priority
+  with_items:
+    - "printf 'Package: *\nPin: release a=unstable\nPin-Priority: 150\n' | sudo tee --append /etc/apt/preferences.d/limit-unstable"
+    - "touch /etc/apt/sources.list.d/.ansible-apt-unstable-priority"
+
 
 - name: armv7l Raspberry pi - make sure are wireguard is up-to-date
   become: yes
