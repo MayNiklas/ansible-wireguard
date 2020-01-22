@@ -46,7 +46,7 @@
 
 - name: Pi Zero - Install Wireguard from source
   make:
-    chdir: /root/wireguard-source/src
+    chdir: ~/wireguard-source/src
     target: install
   become: yes
   when: ansible_architecture == 'armv6l'  
