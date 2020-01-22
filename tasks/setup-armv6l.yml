@@ -16,17 +16,26 @@
   git:
     repo: https://git.zx2c4.com/WireGuard
     dest: ~/wireguard-source 
+ 
 
 - name: Pi Zero - compiling WireGuard
   command: "{{ item }}"
   args:
-    chdir: "~/wireguard-source"
-    creates: ~/.wireguard-compiled
+    chdir: "~/wireguard-source/src"
+    creates: ~/wireguard-source/src/tools/wg
   with_items:
     - "/usr/bin/make"
+  when: ansible_architecture == 'armv6l'
+
+
+- name: Pi Zero - installing WireGuard
+  command: "{{ item }}"
+  args:
+    chdir: "~/wireguard-source/src"
+    creates: /usr/bin/wg
+  with_items:
     - "sudo /usr/bin/make install"
-    - "touch ~/.wireguard-compiled"
-  when: ansible_architecture == 'armv6l'   
+  when: ansible_architecture == 'armv6l'  
 
 
 
