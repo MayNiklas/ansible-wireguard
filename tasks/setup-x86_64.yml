@@ -1,0 +1,38 @@
+---
+# tasks file for ansible-wireguard- name: Debian - installing necessary packages
+
+# - name: Debian - installing necessary packages
+#   become: yes
+#   apt:
+#     state: latest
+#     update_cache: yes
+#     pkg:
+#     - dirmngr
+#     - git
+
+- name: Make sure debian unstable repository is present
+  apt_repository:
+    repo: deb http://deb.debian.org/debian/ unstable main
+    state: present
+    filename: unstable
+
+- name: Add an apt keys from keyserver.ubuntu.com
+  become: yes
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "{{ item }}"
+    state: present
+  with_items:
+    - 8B48AD6246925553
+    - 7638D0442B90D010
+    - 04EE7237B7D453EC
+
+- name: Make sure are necessary packages are up-to-date
+  become: yes
+  apt:
+    state: latest
+    update_cache: yes
+    pkg:
+    - wireguard  
+
+
