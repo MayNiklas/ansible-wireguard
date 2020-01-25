@@ -1,14 +1,5 @@
 ---
-# tasks file for ansible-wireguard- name: Debian - installing necessary packages
-
-#- name: x86_64 - installing necessary packages
-#   become: yes
-#   apt:
-#     state: latest
-#     update_cache: yes
-#     pkg:
-#     - dirmngr
-#     - git
+# tasks file for ansible-wireguard
 
 - name: x86_64 Debian - make sure Debian unstable repository is present
   become: yes
@@ -18,16 +9,6 @@
     filename: unstable
   when: ansible_distribution == 'Debian'
 
-#- name: x86_64 - add apt keys from keyserver.ubuntu.com
-#  become: yes
-#  apt_key:
-#    keyserver: keyserver.ubuntu.com
-#    id: "{{ item }}"
-#    state: present
-#  with_items:
-#    - 8B48AD6246925553
-#    - 7638D0442B90D010
-##    - 04EE7237B7D453EC
 - name: unstable Priority
   become: true
   command: "{{ item }}"
@@ -46,11 +27,19 @@
     state: present
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version == '18'
 
-- name: x86_64 - make sure are wireguard is up-to-date
+- name: x86_64 - make sure are linux-headers up-to-date
   become: yes
   apt:
     state: latest
     update_cache: yes
+    pkg:
+    - "linux-headers-{{ ansible_kernel }}"
+
+
+- name: x86_64 - make sure are wireguard is up-to-date
+  become: yes
+  apt:
+    state: latest
     pkg:
     - wireguard  
 
